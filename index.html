@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>self-vue</title>
+</head>
+<style>
+    #app {
+        text-align: center;
+    }
+</style>
+<body>
+    <div id="app">
+        <h2>{{title.msg.hi}}</h2>
+        <input v-model="name">
+        <h1>{{name}}</h1>
+        <button v-on:click="clickMe">click me!</button>
+        <ul>
+            <li v-for="item in items">
+                {{item}}
+            </li>
+        </ul>
+    </div>
+</body>
+<script src="./observer.js"></script>
+<script src="./watcher.js"></script>
+<script src="./compile.js"></script>
+<script src="./index.js"></script>
+<script type="text/javascript">
+     var vm = new _Vue({
+        el: '#app',
+        data: {
+            title: {
+                msg: {
+                    hi: 'lalal'
+                }
+            },
+            name: 'canfoo'
+        },
+        methods: {
+            clickMe: function () {
+                this.title.msg.hi = 'hello world';
+            }
+        },
+        // mounted: function () {
+        //     window.setTimeout(() => {
+        //         this.title = '你好';
+        //     }, 1000);
+        // }
+    });
+
+    console.log(vm)
+    // console.log(vm.data.title.msg.hi)
+</script>
+</html>
