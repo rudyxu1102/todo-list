@@ -27,7 +27,6 @@ Observer.prototype = {
                     return;
                 }
                 val = newVal;
-                console.log(dep.subs)
                 dep.notify();
             }
         });

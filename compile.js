@@ -20,7 +20,6 @@ Compile.prototype = {
         var child = el.firstChild;
         while (child) {
             // 将Dom元素移入fragment中
-            
             fragment.appendChild(child);
             child = el.firstChild
         }
@@ -30,7 +29,6 @@ Compile.prototype = {
         var childNodes = el.childNodes;
         var self = this;
         [].slice.call(childNodes).forEach(function(node) {
-            // console.log(node)
             var reg = /\{\{(.*)\}\}/;
             var text = node.textContent;
             if (self.isElementNode(node)) {  
@@ -54,7 +52,10 @@ Compile.prototype = {
                 var dir = attrName.substring(2);
                 if (self.isEventDirective(dir)) {  // 事件指令
                     self.compileEvent(node, self.vm, exp, dir);
-                } else {  // v-model 指令
+                } else if (self.isListDirective(dir)) {
+                    self.compileList(node, self.vm, exp, dir)
+                }
+                else {  // v-model 指令
                     self.compileModel(node, self.vm, exp, dir);
                 }
                 node.removeAttribute(attrName);
@@ -77,7 +78,10 @@ Compile.prototype = {
         } else {
             initText = this.vm[exp]
         }
-
+        // 列表渲染
+        if (initText == undefined) {
+            return 
+        }
         this.updateText(node, initText);
         new Watcher(this.vm, exp, function (value) {
             self.updateText(node, value);
@@ -90,6 +94,16 @@ Compile.prototype = {
         if (eventType && cb) {
             node.addEventListener(eventType, cb.bind(vm), false);
         }
+    },
+    compileList: function (node, vm, exp, dir) {
+        var self = this;
+        var key = exp.split('in ')[1];
+        var childName = exp.split(' in')[0];
+        var lists = vm.data[key];
+        this.listUpdater(node, lists, childName);
+        new Watcher(this.vm, key, function (value) {
+            self.listUpdater(node, value, childName)
+        })
     },
     compileModel: function (node, vm, exp, dir) {
         var self = this;
@@ -105,7 +119,7 @@ Compile.prototype = {
                 return;
             }
             self.vm[exp] = newValue;
-            val = newValue;
+            // val = newValue;
         });
     },
     updateText: function (node, value) {
@@ -114,11 +128,45 @@ Compile.prototype = {
     modelUpdater: function(node, value, oldValue) {
         node.value = typeof value == 'undefined' ? '' : value;
     },
+    listUpdater: function (node, list, childName) {
+        var reg = /\{\{(.*)\}\}/;
+        var childNodes = node.childNodes;
+        if (childNodes[0]) {
+            var text = childNodes[0].textContent;
+            var name = reg.exec(text)[1];
+
+            childNodes.forEach(function (child) {
+                if(child.nodeName == "#text" && name === childName) {
+                    node.removeChild(child)
+                }
+            })
+        }
+
+        // if ( name === childName ) {
+            var fragment = document.createDocumentFragment();
+            for (var i=0; i<list.length; i++) {
+                console.log(list[i])
+                console.log(node.nodeName)
+                var textNode = document.createTextNode(list[i]);
+                var ele = document.createElement(node.nodeName);
+                ele.appendChild(textNode)
+                fragment.appendChild(ele)
+            }
+            var parent = node.parentNode;
+            console.log(parent)
+            parent.appendChild(fragment)
+            parent.removeChild(node)
+            console.log(parent)
+        // }
+    },
     isDirective: function(attr) {
         return attr.indexOf('v-') == 0;
     },
     isEventDirective: function(dir) {
         return dir.indexOf('on:') === 0;
+    },
+    isListDirective: function (dir) {
+        return dir === 'for'
     },
     isElementNode: function (node) {
         return node.nodeType == 1;

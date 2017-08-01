@@ -28,13 +28,7 @@ Watcher.prototype = {
         }
     },
     get: function() {
-        // var key;
-        // while ((key = keyRe.exec(this.exp)) !== null) {
-        //     keyRe.lastIndex++
-        //     temText = temText[key]
-        // }
-        // Dep.target = this;  // 缓存自己
-        // var value = temText
+
         if (this.exp.indexOf('.') !== -1) {
             var keyArr = this.exp.split('.')
             var obj = this.vm.data;
@@ -45,7 +39,10 @@ Watcher.prototype = {
             var value = obj[keyArr[i]]
         } else {
             Dep.target = this;  // 缓存自己
-            var value = this.vm.data[this.exp]  // 强制执行监听器里的get函数            
+            var value = this.vm.data[this.exp]  // 强制执行监听器里的get函数  
+            console.log(1111)
+            console.log(this.exp)
+            console.log(value)          
         }
 
         Dep.target = null;  // 释放自己
