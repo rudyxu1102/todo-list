@@ -34,7 +34,7 @@ Observer.prototype = {
 };
 
 function observe(value, vm) {
-    if (!value || typeof value !== 'object') {
+    if (!value || Array.isArray(value) || typeof value !== 'object') {
         return;
     }
     return new Observer(value);

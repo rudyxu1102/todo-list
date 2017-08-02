@@ -39,10 +39,7 @@ Watcher.prototype = {
             var value = obj[keyArr[i]]
         } else {
             Dep.target = this;  // 缓存自己
-            var value = this.vm.data[this.exp]  // 强制执行监听器里的get函数  
-            console.log(1111)
-            console.log(this.exp)
-            console.log(value)          
+            var value = this.vm.data[this.exp]  // 强制执行监听器里的get函数         
         }
 
         Dep.target = null;  // 释放自己

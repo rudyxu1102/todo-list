@@ -12,7 +12,6 @@ function _Vue (options) {
 
     observe(this.data);
     new Compile(options.el, this);
-    // options.mounted.call(this); // 所有事情处理好后执行mounted函数
 }
 
 _Vue.prototype = {
@@ -45,11 +44,14 @@ _Vue.prototype = {
             // 将push, pop等封装好的方法定义在对象arrayAugmentations的属性上
             // 注意：是属性而非原型属性
             arrayAugmentations[method] = function () {
-                self.data[key] = ['hi']
-                // console.log(self.data[key])
-                // console.log(self)
-                // 调用对应的原生方法并返回结果
-                return original.apply(this, arguments);
+                var result = original.apply(this, arguments)
+                var copyArr = this.slice(0);
+                copyArr.__proto__ = arrayAugmentations;
+
+                console.log('数组变动了！')
+                self.data[key] = copyArr
+
+                return result;
             };
         });
         this.data[key].__proto__ = arrayAugmentations;

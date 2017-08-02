@@ -2,55 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>self-vue</title>
+    <title>my-vue</title>
 </head>
 <style>
     #app {
         text-align: center;
     }
+    ul {
+        margin: 20px auto;
+        width: 300px;
+        list-style-type: circle;
+        line-height: 30px;
+    }
 </style>
 <body>
     <div id="app">
-        <h2>{{title.msg.hi}}</h2>
+        <h2 style="color:#83e196">{{title.msg.text}}</h2>
         <input v-model="name">
-        <h1>{{name}}</h1>
-        <button v-on:click="clickMe">click me!</button>
+        <button v-on:click="addTodo(233)">add</button>
+        <h1 style="color:#1ffffa">{{name}}</h1>      
         <ul>
-            <li v-for="item in items">
+            <li v-for="item in items" v-on:click="delTodo(index)">
                 {{item}}
             </li>
+            <p>hey! how are you? 😄</p>
         </ul>
+        <button v-on:click="clickMe">change title!</button>
     </div>
 </body>
-<script src="./observer.js"></script>
-<script src="./watcher.js"></script>
-<script src="./compile.js"></script>
-<script src="./index.js"></script>
+<script src="js/observer.js"></script>
+<script src="js/watcher.js"></script>
+<script src="js/compile.js"></script>
+<script src="js/index.js"></script>
 <script type="text/javascript">
      var vm = new _Vue({
         el: '#app',
         data: {
             title: {
                 msg: {
-                    hi: 'lalal'
+                    text: 'vueTodoDemo'
                 }
             },
-            name: 'canfoo',
+            name: 'hello todo',
             items: ['hello world', 'hello js', 'hello css', 'hello html']
         },
         methods: {
             clickMe: function () {
-                this.title.msg.hi = 'hello world';
+                this.title.msg.text = 'hello todo';
+            },
+            addTodo: function () {
+                this.items.push(this.name)
+            },
+            delTodo: function (index) {
+                this.items.splice(index, 1)
             }
-        },
-        // mounted: function () {
-        //     window.setTimeout(() => {
-        //         this.title = '你好';
-        //     }, 1000);
-        // }
+        }
     });
-
-    console.log(vm)
-    // console.log(vm.data.title.msg.hi)
 </script>
 </html>
