@@ -123,7 +123,7 @@ Object.keys(this.data).forEach(function(key) {
 通过上面的两个步骤我们已经实现一旦数据变动，就会通知对应绑定数据的订阅者，接下来我们来简单介绍一个特殊的订阅者，也就是视图更新函数，几乎每个数据都会添加对应的视图更新函数，所以我们就来简单了解一下视图更新函数。
 
 假如说有下面这一段代码，我们怎么把它解析成对应的html呢？
-```
+```html
 <input v-model="title">
 <h1>{{title}}</h1>
 <button v-on:click="changeTitle">change title<button>
@@ -197,4 +197,5 @@ list2.push('d');  // 4
 > 由于 JavaScript 的限制， Vue 不能检测以下变动的数组：
 > 1. 当你利用索引直接设置一个项时，例如： vm.items[indexOfItem] = newValue
 > 2. 当你修改数组的长度时，例如： vm.items.length = newLength
+
 同时文档中也介绍了如何解决上面这两个问题。
