@@ -12,7 +12,7 @@
 ### 数据代理
 #### 1.简单介绍数据代理
 正常情况下，我们都会把数据写在data里面，如下面所示
-```
+```js
 var vm = new Vue({
     el: '#app',
     data: {
@@ -38,7 +38,7 @@ console.log(vm.title) // 'hello world' or 'hello vue'
 
 
 触发这里的getter将会触发data里面对应属性的getter，触发这里的setter将会触发data里面对应属性的setter，从而实现代理。实现代码如下：
-```
+```js
 var self = this;   // this为vue实例， 即vm
 Object.keys(this.data).forEach(function(key) {
     Object.defineProperty(this, key, {    // this.title, 即vm.title
@@ -66,7 +66,7 @@ Object.keys(this.data).forEach(function(key) {
 #### 2. 发布-订阅模式
 那么问题来了，我们如何在setter里面触发所有绑定该数据的回调函数呢？
 既然绑定该数据的回调函数不止一个，我们就把所有的回调函数放在一个数组里面，一旦触发该数据的setter，就遍历数组触发里面所有的回调函数，我们把这些回调函数称为`订阅者`。数组最好就定义在setter函数的最近的上级作用域中，如下面实例代码所示。
-```
+```js
 Object.keys(this.data).forEach(function(key) {
     var subs = [];  // 在这里放置添加所有订阅者的数组
     Object.defineProperty(this.data, key, {    // this.data.title
@@ -91,7 +91,7 @@ Object.keys(this.data).forEach(function(key) {
 ```
 那么问题又来了，怎么把绑定数据的所有回调函数放到一个数组里面呢？
 我们可以在getter里面做做手脚，我们知道只要访问数据就会触发对应数据的getter，那我们可以先设置一个全局变量target，如果我们要在data里面title属性添加一个订阅者(changeTitle函数)，我们可以先设置target = changeTitle，把changeTitle函数缓存在target中，然后访问this.title去触发title的getter，在getter里面把target这个全局变量的值添加到subs数组里面，添加完成后再把全局变量target设置为null，以便添加其他订阅者。实例代码如下：
-```
+```js
 Object.keys(this.data).forEach(function(key) {
     var subs = [];  // 在这里放置添加所有订阅者的数组
     Object.defineProperty(this.data, key, {    // this.data.title
@@ -161,7 +161,7 @@ Object.keys(this.data).forEach(function(key) {
 > - sort()
 > - reverse()
 下面是 [vue早期源码学习系列之二：如何监听一个数组的变化](https://github.com/youngwind/blog/issues/85) 中的实例代码
-```
+```js
 const aryMethods = ['push', 'pop', 'shift', 'unshift', 'splice', 'sort', 'reverse'];
 const arrayAugmentations = [];
 
