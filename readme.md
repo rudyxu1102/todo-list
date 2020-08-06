@@ -1,4 +1,4 @@
-### 学习vue的双向绑定
+### vue的双向绑定demo
 自己动手实现一个简单的todo-list
 
 > 预览地址： https://fatdong1.github.io/todo-list/index.html
